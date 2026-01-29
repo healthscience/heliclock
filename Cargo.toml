@@ -1,0 +1,29 @@
+[package]
+name = "heli-engine"
+version = "0.1.0"
+edition = "2021"
+authors = ["BentoBoxDS Peer"]
+description = "A high-precision Solar Orbital engine for the Heli Digital Clock"
+
+[lib]
+# This is crucial: it tells Rust to produce a dynamic library
+# that can be consumed by WebAssembly.
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+# The core astronomy library you requested
+astro = "2.0.0"
+
+# Required for JS <-> Rust communication
+wasm-bindgen = "0.2"
+
+# Handles date/time math in a way that works with the astro crate
+chrono = { version = "0.4", features = ["wasmbind"] }
+
+[dev-dependencies]
+wasm-bindgen-test = "0.3"
+
+[profile.release]
+# Optimize for small WASM binary size
+opt-level = "s"
+lto = true
