@@ -1,6 +1,6 @@
 [package]
-name = "heli-engine"
-version = "0.1.0"
+name = "heli-clock"
+version = "0.1.1"
 edition = "2021"
 authors = ["BentoBoxDS Peer"]
 description = "A high-precision Solar Orbital engine for the Heli Digital Clock"
