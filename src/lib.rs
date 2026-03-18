@@ -79,3 +79,38 @@ fn timestamp_to_jd(timestamp_ms: i64) -> f64 {
     
     time::julian_day(&date)
 }
+
+// --- New Heli-Clock Network Logic ---
+#[wasm_bindgen]
+pub struct HeliCoord {
+    // The Location of Truth: 41.5° West
+    // This is the "Prime Meridian" of the HOP Network.
+    truth_longitude: f64,
+}
+
+#[wasm_bindgen]
+impl HeliCoord {
+    #[wasm_bindgen(constructor)]
+    pub fn new() -> HeliCoord {
+        HeliCoord {
+            truth_longitude: -41.5,
+        }
+    }
+
+    /// Instead of checking a "Date," the engine checks the 
+    /// Earth's Ecliptic Longitude (L).
+    /// When L = 0.0, the Network Great Orbit begins.
+    pub fn is_network_equinox(&self, ecliptic_longitude: f64) -> bool {
+        // In the model, 0.0 is the exact physical Equinox.
+        (ecliptic_longitude - 0.0).abs() < 0.0001
+    }
+
+    /// Calculates the "Network Arc" based on the Sun's position 
+    /// relative to the Truth Longitude (-41.5).
+    pub fn get_network_arc(&self, current_solar_longitude: f64) -> f64 {
+        // The Arc is the difference between where the Sun IS 
+        // and where the TRUTH is.
+        let raw_arc = (current_solar_longitude - self.truth_longitude + 180.0) % 360.0;
+        raw_arc / 360.0
+    }
+}
